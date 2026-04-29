@@ -1,0 +1,17 @@
+.navbar{
+    background-color: grey !important;
+    height: 8rem;
+}
+.navbar-brand{
+    color: white !important;
+}
+.nav-link{
+    color: white !important;
+}
+.dropdown-menu{
+    background-color: grey !important;
+}
+.navbar-logo{
+    width: auto;
+    height: 7rem;
+}
