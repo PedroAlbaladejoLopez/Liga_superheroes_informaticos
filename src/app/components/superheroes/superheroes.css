@@ -1,0 +1,20 @@
+.contenedor-heroes{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 2rem;
+}
+.valores-row{
+    display: flex;
+    gap: 10px;
+}
+
+.boton{
+    margin: 1rem;
+    margin-left: 8rem;;
+}
+
+.heroe-card{
+    border: 1px solid #000;
+}

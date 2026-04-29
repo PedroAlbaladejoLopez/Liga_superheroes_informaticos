@@ -9,10 +9,11 @@ export class Heroe {
     descripcion: string ='';
     imagen: string;
     alineacion: string = '';
+    tipo: string = '';
 
     constructor(nombre: string, inteligencia: number, fuerza: number,
          velocidad: number, durabilidad: number, poder: number, combate: number,
-          imagen: string, descripcion: string, alineacion: string) {
+          imagen: string, descripcion: string, alineacion: string, tipo: string) {
         this.nombre = nombre;
         this.inteligencia = inteligencia;
         this.fuerza = fuerza;
@@ -23,5 +24,6 @@ export class Heroe {
         this.imagen = imagen;
         this.descripcion = descripcion;
         this.alineacion = alineacion;
+        this.tipo = tipo;
     }   
 }
