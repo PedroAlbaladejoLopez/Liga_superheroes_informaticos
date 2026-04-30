@@ -14,31 +14,31 @@
 </div>
 
 @switch(tipoFiltrado){
-    @case ('Todos'){
-        @defer(on timer (3000)){
-        <h3 class="texto-filtrado">Mostrando superheroes de todos los tipos</h3>
-        }@placeholder{  
-        <h3 class="texto-filtrado">Cargando superheroes...</h3>
-        }
-    }
-    @case ('Programador'){
-    <h3 class="texto-filtrado">Mostrando superheroes de tipo Programador</h3>
-    }
-    @case ('QA'){
-    <h3 class="texto-filtrado">Mostrando superheroes de tipo QA</h3>
-    }
-    @case ('Negocio'){
-    <h3 class="texto-filtrado">Mostrando superheroes de tipo Negocio</h3>
-    }
-    @case ('Sistemas'){
-    <h3 class="texto-filtrado">Mostrando superheroes de tipo Sistemas</h3>
-    }
-    @default{
-    <h3 class="texto-filtrado">Selecciona un tipo de héroe para mostrar</h3>
-    }
+@case ('Todos'){
+@defer(on timer (3000)){
+<h3 class="texto-filtrado">Mostrando superheroes de todos los tipos</h3>
+}@placeholder{
+<h3 class="texto-filtrado">Cargando titulo...</h3>
+}
+}
+@case ('Programador'){
+<h3 class="texto-filtrado">Mostrando superheroes de tipo Programador</h3>
+}
+@case ('QA'){
+<h3 class="texto-filtrado">Mostrando superheroes de tipo QA</h3>
+}
+@case ('Negocio'){
+<h3 class="texto-filtrado">Mostrando superheroes de tipo Negocio</h3>
+}
+@case ('Sistemas'){
+<h3 class="texto-filtrado">Mostrando superheroes de tipo Sistemas</h3>
+}
+@default{
+<h3 class="texto-filtrado">Selecciona un tipo de héroe para mostrar</h3>
+}
 }
 
-<div class="contenedor-heroes" *ngIf="mostrarHeroes">
+<!-- <div class="contenedor-heroes" *ngIf="mostrarHeroes">
     <div class="card heroe-card" style="width: 18rem;" *ngFor="let heroe of heroesFiltrados">
         <img [src]="heroe.imagen" class="card-img-top" alt="{{ heroe.nombre }}">
         <div class="card-body">
@@ -46,18 +46,41 @@
             <p class="card-text">{{ heroe.descripcion }}</p>
         </div>
     </div>
-</div>
+</div> -->
 
 @if(mostrarHeroes){
 <div class="contenedor-heroes">
     @for(heroe of heroesFiltrados; track heroe){
-    <div class="card heroe-card" style="width: 18rem;">
-        <img [src]="heroe.imagen" class="card-img-top" alt="{{ heroe.nombre }}">
-        <div class="card-body">
-            <h5 class="card-title">{{ heroe.nombre }}</h5>
-            <p class="card-text">{{ heroe.descripcion }}</p>
-        </div>
-    </div>
+    <app-superheroe [heroe]="heroe" (expulsar)="expulsarHeroe($event)"
+        (modalEditar)="modalEditarHeroe($event)"></app-superheroe>
     }
 </div>
 }
+
+
+<div class="modal" id="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Heroe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" [(ngModel)]="heroeEditado.nombre" name="nombre" class="form-control">
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" [(ngModel)]="heroeEditado.descripcion" name="descripcion"
+                        class="form-control"></textarea>
+                    <label for="imagen">Imagen:</label>
+                    <input type="text" id="imagen" [(ngModel)]="heroeEditado.imagen" name="imagen" class="form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="editarHeroe(heroeEditado)"
+                    data-bs-dismiss="modal">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
