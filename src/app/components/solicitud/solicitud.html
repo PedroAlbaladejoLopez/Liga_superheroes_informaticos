@@ -73,11 +73,11 @@
             <button type="submit">Registrar Héroe</button>
         </form>
     </div>
-    
+
     <!-- Card de previsualización del héroe propuesto -->
     <div class="card-container">
         @if(heroePropuesto.nombre){
-            <app-superheroe [heroe]="heroePropuesto"></app-superheroe>
+            <app-superheroe [heroe]="heroePropuesto" [edicionHabilitada]="false"></app-superheroe>
         }
     </div>
 </div>

@@ -13,6 +13,7 @@ declare var bootstrap: any;
 })
 export class Superheroes implements OnInit {
   mostrarHeroes: boolean = false;
+  edicionHabilitada: boolean = true;
   tipoFiltrado: string = 'Todos';
   heroes: Heroe[] = [];
   heroesFiltrados: Heroe[] = [];

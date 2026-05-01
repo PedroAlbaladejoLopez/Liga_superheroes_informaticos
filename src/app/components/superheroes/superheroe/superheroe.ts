@@ -9,6 +9,7 @@ import { Heroe } from '../../../models/heroe';
 })
 export class Superheroe implements OnChanges, OnDestroy {
   @Input() heroe!: Heroe;
+  @Input() edicionHabilitada!: boolean;
   heroeEditado: Heroe = new Heroe('', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0);
   @Output() expulsar = new EventEmitter<Heroe>();
   @Output() modalEditar = new EventEmitter<Heroe>();

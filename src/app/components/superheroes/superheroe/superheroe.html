@@ -6,8 +6,10 @@
         <h5 class="card-title">{{ heroe.nombre }}</h5>
         <p class="card-text">{{ heroe.descripcion }}</p>
     </div>
+    @if(edicionHabilitada){
     <div class="card-buttons">
         <button class="btn btn-danger" (click)="expulsarHeroe()">Expulsar</button>
         <button class="btn btn-warning" (click)="editarHeroe()">Editar</button>
     </div>
+    }
 </div>
