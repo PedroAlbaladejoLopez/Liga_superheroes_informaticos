@@ -7,9 +7,9 @@ import { Heroe } from '../../../models/heroe';
   templateUrl: './superheroe.html',
   styleUrl: './superheroe.css',
 })
-export class Superheroe implements OnChanges, OnDestroy, DoCheck {
+export class Superheroe implements OnChanges, OnDestroy {
   @Input() heroe!: Heroe;
-  heroeEditado: Heroe = new Heroe('', '', 0, 0, 0, 0, 0, 0, '', '', '', '');
+  heroeEditado: Heroe = new Heroe('', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0);
   @Output() expulsar = new EventEmitter<Heroe>();
   @Output() modalEditar = new EventEmitter<Heroe>();
 
@@ -20,12 +20,12 @@ export class Superheroe implements OnChanges, OnDestroy, DoCheck {
   }
 
   ngOnDestroy(): void {
-    window.alert(`El héroe ${this.heroe.nombre} ha sido ELIMINADO`);
+    window.alert(`El héroe ${this.heroe.nombre} ha sido ELIMINADO de la lista`);
   }
 
-  ngDoCheck(): void {
-      alert(`El héroe ${this.heroe.nombre} ha sido VERIFICADO`);
-  }
+  // ngDoCheck(): void {
+  //     alert(`El héroe ${this.heroe.nombre} ha sido VERIFICADO`);
+  // }
 
   expulsarHeroe() {
     this.expulsar.emit(this.heroe);
