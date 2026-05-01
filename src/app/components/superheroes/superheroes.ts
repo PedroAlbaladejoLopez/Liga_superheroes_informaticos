@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Heroe } from '../../models/heroe';
 import { CommonModule } from '@angular/common';
 import { Superheroe } from './superheroe/superheroe';
@@ -11,18 +11,22 @@ declare var bootstrap: any;
   templateUrl: './superheroes.html',
   styleUrl: './superheroes.css',
 })
-export class Superheroes {
+export class Superheroes implements OnInit {
   mostrarHeroes: boolean = false;
   tipoFiltrado: string = 'Todos';
-  heroes: Heroe[] = [
-    new Heroe('1', 'Capitán Frontend', 90, 30, 70, 80, 60, 50, "Capitan_frontend.png", "Líder del equipo de desarrollo frontend", "amigo", "Programador"),
+  heroes: Heroe[] = [];
+  heroesFiltrados: Heroe[] = [];
+  heroeEditado: Heroe = new Heroe('', '', 0, 0, 0, 0, 0, 0, '', '', '', '');
+
+  ngOnInit() {
+    this.heroes = [new Heroe('1', 'Capitán Frontend', 90, 30, 70, 80, 60, 50, "Capitan_frontend.png", "Líder del equipo de desarrollo frontend", "amigo", "Programador"),
     new Heroe('2', 'Backend Master', 80, 70, 90, 60, 50, 40, "Backend_Bruiser.png", "Experto en desarrollo backend", "amigo", "Programador"),
     new Heroe('3', 'Bug Buster', 70, 80, 60, 90, 40, 30, "Bug_Buster.png", "Especialista en pruebas y depuración de código", "amigo", "QA"),
     new Heroe('4', 'Product Ownerman', 60, 90, 80, 70, 30, 20, "Producto_Man.png", "Visionario del producto final", "amigo", "Negocio"),
     new Heroe('5', 'Titán del sistema', 85, 75, 65, 95, 55, 45, "Sys_Titan.png", "Maestro de la arquitectura y el diseño de sistemas", "amigo", "Sistemas"),
-  ]
-  heroesFiltrados: Heroe[] = this.heroes;
-  heroeEditado: Heroe = new Heroe('', '', 0, 0, 0, 0, 0, 0, '', '', '', '');
+    ]
+    this.heroesFiltrados = this.heroes;
+  }
 
   filtrarHeroes(tipo: string) {
     this.tipoFiltrado = tipo;

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, DoCheck, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Heroe } from '../../../models/heroe';
 
 @Component({
@@ -7,14 +7,30 @@ import { Heroe } from '../../../models/heroe';
   templateUrl: './superheroe.html',
   styleUrl: './superheroe.css',
 })
-export class Superheroe {
+export class Superheroe implements OnChanges, OnDestroy, DoCheck {
   @Input() heroe!: Heroe;
+  heroeEditado: Heroe = new Heroe('', '', 0, 0, 0, 0, 0, 0, '', '', '', '');
   @Output() expulsar = new EventEmitter<Heroe>();
-  @Output() modalEditar = new EventEmitter<Heroe>(); 
+  @Output() modalEditar = new EventEmitter<Heroe>();
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['heroe'] && !changes['heroe'].isFirstChange()) {
+      window.alert(`El héroe ${this.heroe.nombre} ha sido EDITADO`);
+    }
+  }
+
+  ngOnDestroy(): void {
+    window.alert(`El héroe ${this.heroe.nombre} ha sido ELIMINADO`);
+  }
+
+  ngDoCheck(): void {
+      alert(`El héroe ${this.heroe.nombre} ha sido VERIFICADO`);
+  }
 
   expulsarHeroe() {
     this.expulsar.emit(this.heroe);
-  } 
+  }
+
   editarHeroe() {
     this.modalEditar.emit(this.heroe);
   }

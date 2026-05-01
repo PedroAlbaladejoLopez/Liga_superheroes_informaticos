@@ -38,6 +38,8 @@
 }
 }
 
+<!-- Ejemplo de directivas con anotaciones antiguas ngFor y ngIf -->
+
 <!-- <div class="contenedor-heroes" *ngIf="mostrarHeroes">
     <div class="card heroe-card" style="width: 18rem;" *ngFor="let heroe of heroesFiltrados">
         <img [src]="heroe.imagen" class="card-img-top" alt="{{ heroe.nombre }}">
@@ -50,14 +52,14 @@
 
 @if(mostrarHeroes){
 <div class="contenedor-heroes">
-    @for(heroe of heroesFiltrados; track heroe){
+    @for(heroe of heroesFiltrados; track heroe.id){
     <app-superheroe [heroe]="heroe" (expulsar)="expulsarHeroe($event)"
         (modalEditar)="modalEditarHeroe($event)"></app-superheroe>
     }
 </div>
 }
 
-
+<!-- Modal Editar Heroe -->
 <div class="modal" id="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
