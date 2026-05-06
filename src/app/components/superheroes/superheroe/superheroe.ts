@@ -24,8 +24,15 @@ export class Superheroe implements OnChanges, OnDestroy {
     window.alert(`El héroe ${this.heroe.nombre} ha sido ELIMINADO de la lista`);
   }
 
+// ngAfterViewInit(): void {
+//     window.alert(`El héroe ${this.heroe.nombre} ha sido CREADO`);
+//   }
+
   // ngDoCheck(): void {
   //     alert(`El héroe ${this.heroe.nombre} ha sido VERIFICADO`);
+  // }
+  // ngAfterViewChecked(): void {
+  //    alert(`El héroe ${this.heroe.nombre} ha sido CHECKEADO`);
   // }
 
   expulsarHeroe() {

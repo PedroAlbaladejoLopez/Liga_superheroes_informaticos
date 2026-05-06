@@ -25,7 +25,8 @@ export class Superheroes implements OnInit {
     new Heroe('3', 'Bug Buster', 70, 80, 60, 90, 40, 30, "Bug_Buster.png", "Especialista en pruebas y depuración de código", "amigo", "QA", 0),
     new Heroe('4', 'Product Ownerman', 60, 90, 80, 70, 30, 20, "Producto_Man.png", "Visionario del producto final", "amigo", "Negocio", 0),
     new Heroe('5', 'Titán del sistema', 85, 75, 65, 95, 55, 45, "Sys_Titan.png", "Maestro de la arquitectura y el diseño de sistemas", "amigo", "Sistemas", 0),
-    ]
+  ]
+
     this.heroesFiltrados = this.heroes;
   }
 
