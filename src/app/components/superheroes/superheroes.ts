@@ -1,7 +1,10 @@
 import {
   Component,
   OnInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  signal,
+  computed,
+  effect
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -16,22 +19,28 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-superheroes',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    Superheroe
-  ],
+  imports: [CommonModule, FormsModule, Superheroe],
   templateUrl: './superheroes.html',
   styleUrl: './superheroes.css',
 })
 export class Superheroes implements OnInit {
 
-  mostrarHeroes: boolean = true;
-  tipoFiltrado: string = 'Todos';
-  heroes: Heroe[] = [];
-  heroesFiltrados: Heroe[] = [];
-  edicionHabilitada = true;
-  heroeEditado: Heroe = new Heroe('', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, 0);
+  /* ------------------------------------------------------------
+     ESTADO REACTIVO CON SIGNALS
+  ------------------------------------------------------------ */
+  mostrarHeroes = signal(true);
+  tipoFiltrado = signal('Todos');
+  heroes = signal<Heroe[]>([]);
+  heroesFiltrados = computed(() => {
+    const tipo = this.tipoFiltrado();
+    const lista = this.heroes();
+    return tipo === 'Todos'
+      ? lista.filter(h => h.alineacion === 'amigo')
+      : lista.filter(h => h.tipo === tipo && h.alineacion === 'amigo');
+  });
+
+  edicionHabilitada = signal(true);
+  heroeEditado = signal(new Heroe('', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, 0));
   archivoEditar: File | null = null;
 
   constructor(
@@ -41,35 +50,42 @@ export class Superheroes implements OnInit {
 
   ngOnInit() {
     this.obtenerHeroes();
+    /* Efecto opcional para depuración */
+    effect(() => console.log('Héroes filtrados:', this.heroesFiltrados()));
   }
 
+  /* ------------------------------------------------------------
+     OBTENER HÉROES
+  ------------------------------------------------------------ */
   obtenerHeroes() {
-    this.heroesService.getHeroes().subscribe((data: Heroe[]) => {
-      this.heroes = data;
-      this.filtrarHeroes(this.tipoFiltrado);
+    this.heroesService.getHeroes().then((data: Heroe[]) => {
+      this.heroes.set(data);
       this.cdr.detectChanges();
     });
   }
 
+  /* ------------------------------------------------------------
+     FILTRAR HÉROES
+  ------------------------------------------------------------ */
   filtrarHeroes(tipo: string) {
-    this.tipoFiltrado = tipo;
-    if (tipo === 'Todos') {
-      this.heroesFiltrados = this.heroes.filter(h => h.alineacion === 'amigo');
-    } else {
-      this.heroesFiltrados = this.heroes.filter(h => h.tipo === tipo && h.alineacion === 'amigo');
-    }
+    this.tipoFiltrado.set(tipo);
   }
 
+  /* ------------------------------------------------------------
+     ELIMINAR HÉROE
+  ------------------------------------------------------------ */
   expulsarHeroe(heroe: Heroe) {
-    /* Eliminar héroe del backend */
-    this.heroesService.deleteHeroe(heroe.id).subscribe(() => {
+    this.heroesService.deleteHeroe(heroe.id).then(() => {
       this.obtenerHeroes();
       this.cdr.detectChanges();
     });
   }
 
+  /* ------------------------------------------------------------
+     MODAL DE EDICIÓN
+  ------------------------------------------------------------ */
   modalEditarHeroe(heroe: Heroe) {
-    this.heroeEditado = heroe;
+    this.heroeEditado.set(heroe);
     this.archivoEditar = null;
     this.mostrarModal();
   }
@@ -80,42 +96,30 @@ export class Superheroes implements OnInit {
     modal.show();
   }
 
+  /* ------------------------------------------------------------
+     EDITAR HÉROE
+  ------------------------------------------------------------ */
   editarHeroe(heroeEditado: Heroe) {
-    /* Si hay imagen nueva */
     if (this.archivoEditar) {
-      /* Subir imagen nueva */
-      this.heroesService.uploadImage(this.archivoEditar).subscribe(response => {
-        /* Actualizar héroe con nueva imagen */
+      this.heroesService.uploadImage(this.archivoEditar).then(response => {
         heroeEditado.imagen = response.filename;
-        /* Guardar cambios en Heroe en backend */
-        this.heroesService.updateHeroe(heroeEditado.id, heroeEditado).subscribe((heroeActualizado: Heroe) => {
-          /* Refrescar lista de héroes para mostrar cambios */
-          this.heroesService.getHeroes().subscribe((data: Heroe[]) => {
-            this.heroes = data;
-            this.obtenerHeroes();
-            this.archivoEditar = null;
-          });
+        this.heroesService.updateHeroe(heroeEditado.id, heroeEditado).then(() => {
+          this.obtenerHeroes();
+          this.archivoEditar = null;
         });
       });
-      /* Si no hay imagen nueva */
     } else {
-      /* Guardar cambios en Heroe en backend */
-      this.heroesService.updateHeroe(heroeEditado.id, heroeEditado).subscribe((heroeActualizado: Heroe) => {
-        /* Refrescar lista de héroes para mostrar cambios */
-        this.heroesService.getHeroes().subscribe((data: Heroe[]) => {
-          this.heroes = data;
-          this.obtenerHeroes();
-        });
+      this.heroesService.updateHeroe(heroeEditado.id, heroeEditado).then(() => {
+        this.obtenerHeroes();
       });
     }
   }
 
+  /* ------------------------------------------------------------
+     INPUT FILE
+  ------------------------------------------------------------ */
   archivoSeleccionado(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      this.archivoEditar = input.files[0];
-    } else {
-      this.archivoEditar = null;
-    }
+    this.archivoEditar = input.files?.length ? input.files[0] : null;
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Heroe } from '../../models/heroe';
 import { Superheroe } from '../superheroes/superheroe/superheroe';
@@ -14,11 +14,13 @@ import { HeroesService } from '../../services/heroes-service';
 })
 export class Solicitud {
 
+  /* ------------------------------------------------------------
+     ESTADO REACTIVO CON SIGNALS
+  ------------------------------------------------------------ */
   formulario: FormGroup;
-  heroePropuesto: Heroe = new Heroe('', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, 0);
-
+  heroePropuesto = signal<Heroe>(new Heroe('', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, 0));
   archivoSeleccionado: File | null = null;
-  archivoError = false;
+  archivoError = signal(false);
 
   constructor(private fb: FormBuilder, private heroesService: HeroesService) {
     this.formulario = this.fb.group({
@@ -30,52 +32,55 @@ export class Solicitud {
     });
   }
 
+  /* ------------------------------------------------------------
+     SELECCIÓN DE ARCHIVO
+  ------------------------------------------------------------ */
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-
-    if (input.files && input.files.length > 0) {
+    if (input.files?.length) {
       this.archivoSeleccionado = input.files[0];
-      this.archivoError = false;
+      this.archivoError.set(false);
     } else {
       this.archivoSeleccionado = null;
-      this.archivoError = true;
+      this.archivoError.set(true);
     }
   }
 
-  registrarHeroe() {
+  /* ------------------------------------------------------------
+     REGISTRAR NUEVO HÉROE
+  ------------------------------------------------------------ */
+  async registrarHeroe() {
     // 1. Validar formulario y archivo
-  if (this.formulario.invalid || !this.archivoSeleccionado) {
-    this.formulario.markAllAsTouched();
-    this.archivoError = !this.archivoSeleccionado;
-    return;
-  }
+    if (this.formulario.invalid || !this.archivoSeleccionado) {
+      this.formulario.markAllAsTouched();
+      this.archivoError.set(!this.archivoSeleccionado);
+      return;
+    }
 
-  const f = this.formulario.value;
+    const f = this.formulario.value;
 
-  // 2. Subir la imagen REAL
-  this.heroesService.uploadImage(this.archivoSeleccionado).subscribe(response => {
+    // 2. Subir imagen al backend
+    const response = await this.heroesService.uploadImage(this.archivoSeleccionado);
 
-    // 3. Crear el héroe con el filename devuelto por el backend
+    // 3. Crear héroe con el filename devuelto
     const nuevoHeroe = new Heroe(
       crypto.randomUUID(),
       f.nombre,
       f.descripcion,
       response.filename,
-      "amigo",
+      'amigo',
       f.tipo,
       f.email,
       f.numeroMedallas,
       0, 0, 0, 0, 0, 0
     );
 
-    // 4. Guardarlo en backend
-    this.heroesService.postHeroe(nuevoHeroe).subscribe(() => {
-      this.formulario.reset();
-      this.archivoSeleccionado = null;
-      this.heroePropuesto = nuevoHeroe;
-    });
+    // 4. Guardar héroe en backend
+    await this.heroesService.postHeroe(nuevoHeroe);
 
-  });
-}
-
+    // 5. Actualizar estado reactivo
+    this.formulario.reset();
+    this.archivoSeleccionado = null;
+    this.heroePropuesto.set(nuevoHeroe);
+  }
 }

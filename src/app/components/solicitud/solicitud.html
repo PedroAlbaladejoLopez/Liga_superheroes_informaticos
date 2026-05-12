@@ -35,7 +35,7 @@
             <label>Imagen (archivo):</label>
             <input type="file" (change)="onFileSelected($event)" />
 
-            @if (archivoError) {
+            @if (archivoError()) {
                 <small style="color:red">Debes seleccionar un archivo válido.</small>
             }
 
@@ -56,7 +56,7 @@
             <label>Tipo:</label>
             <select formControlName="tipo">
                 <option value="">Seleccione tipo</option>
-                <option value="Frontend">Programador</option>
+                <option value="Programador">Programador</option>
                 <option value="Sistemas">Sistemas</option>
                 <option value="QA">QA</option>
                 <option value="Negocio">Negocio</option>
@@ -75,8 +75,11 @@
 
     <!-- Card de previsualización del héroe propuesto -->
     <div class="card-container">
-        @if(heroePropuesto.nombre){
-            <app-superheroe [heroe]="heroePropuesto" [edicionHabilitada]="false"></app-superheroe>
+        @if(heroePropuesto().nombre){
+            <app-superheroe 
+                [heroe]="heroePropuesto()" 
+                [edicionHabilitada]="false">
+            </app-superheroe>
         }
     </div>
 </div>
