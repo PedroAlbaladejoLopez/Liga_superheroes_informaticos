@@ -1,11 +1,13 @@
 <div class="card heroe-card">
     <div class="card-img-top">
-        <img [src]="heroe.imagen" class="card-img-top" alt="{{ heroe.nombre }}">
+        <img [src]="'http://localhost:5000/images/' + heroe.imagen" class="card-img-top" alt="{{ heroe.nombre }}">
     </div>
+
     <div class="card-body">
         <h5 class="card-title">{{ heroe.nombre }}</h5>
         <p class="card-text">{{ heroe.descripcion }}</p>
     </div>
+
     @if(edicionHabilitada){
     <div class="card-buttons">
         <button class="btn btn-danger" (click)="expulsarHeroe()">Expulsar</button>

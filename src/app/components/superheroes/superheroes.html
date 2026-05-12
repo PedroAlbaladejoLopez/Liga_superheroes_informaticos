@@ -75,7 +75,49 @@
                     <textarea id="descripcion" [(ngModel)]="heroeEditado.descripcion" name="descripcion"
                         class="form-control"></textarea>
                     <label for="imagen">Imagen:</label>
-                    <input type="text" id="imagen" [(ngModel)]="heroeEditado.imagen" name="imagen" class="form-control">
+                    <input type="file" id="imagen" (change)="archivoSeleccionado($event)" name="imagen" class="form-control">
+                    <label for="alineacion">Alineación:</label>
+                    <select id="alineacion" [(ngModel)]="heroeEditado.alineacion" name="alineacion" class="form-control">
+                        <option value="amigo">amigo</option>
+                        <option value="enemigo">enemigo</option>
+                    </select>
+                    <label for="tipo">Tipo:</label>
+                    <select id="tipo" [(ngModel)]="heroeEditado.tipo" name="tipo" class="form-control">
+                        <option value="Programador">Programador</option>
+                        <option value="QA">QA</option>
+                        <option value="Negocio">Negocio</option>
+                        <option value="Sistemas">Sistemas</option>
+                    </select>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" [(ngModel)]="heroeEditado.email" name="email" class="form-control">
+                    <label for="numeroMedallas">Número de Medallas:</label>
+                    <input type="number" id="numeroMedallas" [(ngModel)]="heroeEditado.numeroMedallas" name="numeroMedallas" class="form-control">
+                    <div  class="atributos_combate_num">
+                        <div>
+                            <label for="inteligencia">Inteligencia:</label>
+                            <input type="number" id="inteligencia" [(ngModel)]="heroeEditado.inteligencia" name="inteligencia" class="form-control">
+                        </div>
+                        <div>
+                            <label for="fuerza">Fuerza:</label>
+                            <input type="number" id="fuerza" [(ngModel)]="heroeEditado.fuerza" name="fuerza" class="form-control">
+                        </div>
+                        <div>
+                            <label for="velocidad">Velocidad:</label>
+                            <input type="number" id="velocidad" [(ngModel)]="heroeEditado.velocidad" name="velocidad" class="form-control">
+                        </div>
+                        <div>
+                            <label for="durabilidad">Durabilidad:</label>
+                            <input type="number" id="durabilidad" [(ngModel)]="heroeEditado.durabilidad" name="durabilidad" class="form-control">
+                        </div>
+                        <div>
+                            <label for="poder">Poder:</label>
+                            <input type="number" id="poder" [(ngModel)]="heroeEditado.poder" name="poder" class="form-control">
+                        </div>
+                        <div>
+                            <label for="combate">Combate:</label>
+                            <input type="number" id="combate" [(ngModel)]="heroeEditado.combate" name="combate" class="form-control">
+                        </div>      
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
