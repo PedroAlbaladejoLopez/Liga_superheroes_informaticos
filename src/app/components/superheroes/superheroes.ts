@@ -4,7 +4,8 @@ import {
   ChangeDetectorRef,
   signal,
   computed,
-  effect
+  effect,
+  Signal
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -13,6 +14,10 @@ import { FormsModule } from '@angular/forms';
 import { Heroe } from '../../models/heroe';
 import { HeroesService } from '../../services/heroes-service';
 import { Superheroe } from './superheroe/superheroe';
+import { Store } from '@ngrx/store';
+import { toggleFavorito } from '../../store/heroes/heroes.actions';
+import { selectFavoritosIds } from '../../store/heroes/heroes.selectors';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 declare var bootstrap: any;
 
@@ -21,7 +26,7 @@ declare var bootstrap: any;
   standalone: true,
   imports: [CommonModule, FormsModule, Superheroe],
   templateUrl: './superheroes.html',
-  styleUrl: './superheroes.css',
+  styleUrls: ['./superheroes.css'],
 })
 export class Superheroes implements OnInit {
 
@@ -42,16 +47,26 @@ export class Superheroes implements OnInit {
   edicionHabilitada = signal(true);
   heroeEditado = signal(new Heroe('', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, 0));
   archivoEditar: File | null = null;
+  favoritosIds!: Signal<string[]>;
+  heroesFavoritos = computed(() => {
+    const ids = this.favoritosIds();
+    const lista = this.heroes();
+    return lista.filter(h => ids.includes(h.id));
+  });
 
   constructor(
     private heroesService: HeroesService,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+    private store: Store
+  ) { 
+    this.favoritosIds = toSignal(
+      this.store.select(selectFavoritosIds),
+      { initialValue: [] }
+    );
+  }
 
   ngOnInit() {
     this.obtenerHeroes();
-    /* Efecto opcional para depuración */
-    effect(() => console.log('Héroes filtrados:', this.heroesFiltrados()));
   }
 
   /* ------------------------------------------------------------
@@ -121,5 +136,13 @@ export class Superheroes implements OnInit {
   archivoSeleccionado(event: Event) {
     const input = event.target as HTMLInputElement;
     this.archivoEditar = input.files?.length ? input.files[0] : null;
+  }
+
+  toggleFavorito(): void{
+    this.store.dispatch(toggleFavorito({ id: this.heroeEditado().id }));
+  }
+  
+    esFavorito(heroeId: string): boolean {
+    return this.favoritosIds().includes(heroeId);
   }
 }

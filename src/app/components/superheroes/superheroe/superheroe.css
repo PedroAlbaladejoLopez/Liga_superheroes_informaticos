@@ -19,3 +19,14 @@
     width: 100%;
     justify-content: justify;
 }
+.btn-fav{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.4rem;
+    height: 1.5rem;
+    margin-top: 0rem;
+}
+h5{
+    width: 90%;
+}

@@ -20,3 +20,13 @@
 .modal-header {
     background-color: orange !important;
 }
+h3{
+    text-align: center;
+}
+.sin-favoritos{
+    text-align: center;
+    font-style: italic;
+    color: rgb(247, 3, 3);
+    font-weight: bold;
+
+}
